@@ -24,8 +24,8 @@ describe('TonSmart', () => {
                     id: 0,
                     counter: 0,
                 },
-                code
-            )
+                code,
+            ),
         );
 
         deployer = await blockchain.treasury('deployer');
