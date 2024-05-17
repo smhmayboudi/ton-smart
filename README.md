@@ -1,4 +1,4 @@
-# ton-smart
+# ton-smart-func
 
 ## Project structure
 
@@ -25,4 +25,4 @@
 
 `npx blueprint create ContractName` or `yarn blueprint create ContractName`
 
-# ton-smart
+# ton-smart-func

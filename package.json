@@ -1,5 +1,5 @@
 {
-    "name": "ton-smart",
+    "name": "ton-smart-func",
     "version": "0.0.1",
     "scripts": {
         "start": "blueprint run",

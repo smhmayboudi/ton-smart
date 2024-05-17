@@ -1,25 +1,25 @@
 import { Blockchain, SandboxContract, TreasuryContract } from '@ton/sandbox';
 import { Cell, toNano } from '@ton/core';
-import { TonSmart } from '../wrappers/TonSmart';
+import { TonSmartFunc } from '../wrappers/TonSmartFunc';
 import '@ton/test-utils';
 import { compile } from '@ton/blueprint';
 
-describe('TonSmart', () => {
+describe('TonSmartFunc', () => {
     let code: Cell;
 
     beforeAll(async () => {
-        code = await compile('TonSmart');
+        code = await compile('TonSmartFunc');
     });
 
     let blockchain: Blockchain;
     let deployer: SandboxContract<TreasuryContract>;
-    let tonSmart: SandboxContract<TonSmart>;
+    let tonSmartFunc: SandboxContract<TonSmartFunc>;
 
     beforeEach(async () => {
         blockchain = await Blockchain.create();
 
-        tonSmart = blockchain.openContract(
-            TonSmart.createFromConfig(
+        tonSmartFunc = blockchain.openContract(
+            TonSmartFunc.createFromConfig(
                 {
                     id: 0,
                     counter: 0,
@@ -30,11 +30,11 @@ describe('TonSmart', () => {
 
         deployer = await blockchain.treasury('deployer');
 
-        const deployResult = await tonSmart.sendDeploy(deployer.getSender(), toNano('0.05'));
+        const deployResult = await tonSmartFunc.sendDeploy(deployer.getSender(), toNano('0.05'));
 
         expect(deployResult.transactions).toHaveTransaction({
             from: deployer.address,
-            to: tonSmart.address,
+            to: tonSmartFunc.address,
             deploy: true,
             success: true,
         });
@@ -42,7 +42,7 @@ describe('TonSmart', () => {
 
     it('should deploy', async () => {
         // the check is done inside beforeEach
-        // blockchain and tonSmart are ready to use
+        // blockchain and tonSmartFunc are ready to use
     });
 
     it('should increase counter', async () => {
@@ -52,7 +52,7 @@ describe('TonSmart', () => {
 
             const increaser = await blockchain.treasury('increaser' + i);
 
-            const counterBefore = await tonSmart.getCounter();
+            const counterBefore = await tonSmartFunc.getCounter();
 
             console.log('counter before increasing', counterBefore);
 
@@ -60,18 +60,18 @@ describe('TonSmart', () => {
 
             console.log('increasing by', increaseBy);
 
-            const increaseResult = await tonSmart.sendIncrease(increaser.getSender(), {
+            const increaseResult = await tonSmartFunc.sendIncrease(increaser.getSender(), {
                 increaseBy,
                 value: toNano('0.05'),
             });
 
             expect(increaseResult.transactions).toHaveTransaction({
                 from: increaser.address,
-                to: tonSmart.address,
+                to: tonSmartFunc.address,
                 success: true,
             });
 
-            const counterAfter = await tonSmart.getCounter();
+            const counterAfter = await tonSmartFunc.getCounter();
 
             console.log('counter after increasing', counterAfter);
 

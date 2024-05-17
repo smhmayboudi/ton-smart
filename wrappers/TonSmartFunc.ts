@@ -1,11 +1,11 @@
 import { Address, beginCell, Cell, Contract, contractAddress, ContractProvider, Sender, SendMode } from '@ton/core';
 
-export type TonSmartConfig = {
+export type TonSmartFuncConfig = {
     id: number;
     counter: number;
 };
 
-export function tonSmartConfigToCell(config: TonSmartConfig): Cell {
+export function tonSmartFuncConfigToCell(config: TonSmartFuncConfig): Cell {
     return beginCell().storeUint(config.id, 32).storeUint(config.counter, 32).endCell();
 }
 
@@ -13,20 +13,20 @@ export const Opcodes = {
     increase: 0x7e8764ef,
 };
 
-export class TonSmart implements Contract {
+export class TonSmartFunc implements Contract {
     constructor(
         readonly address: Address,
         readonly init?: { code: Cell; data: Cell },
     ) {}
 
     static createFromAddress(address: Address) {
-        return new TonSmart(address);
+        return new TonSmartFunc(address);
     }
 
-    static createFromConfig(config: TonSmartConfig, code: Cell, workchain = 0) {
-        const data = tonSmartConfigToCell(config);
+    static createFromConfig(config: TonSmartFuncConfig, code: Cell, workchain = 0) {
+        const data = tonSmartFuncConfigToCell(config);
         const init = { code, data };
-        return new TonSmart(contractAddress(workchain, init), init);
+        return new TonSmartFunc(contractAddress(workchain, init), init);
     }
 
     async sendDeploy(provider: ContractProvider, via: Sender, value: bigint) {
