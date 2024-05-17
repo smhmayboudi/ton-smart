@@ -31,6 +31,7 @@ global int ctx_counter;
 
 ;; recv_internal is the main function of the contract and is called when it receives a message from other contracts
 () recv_internal(int my_balance, int msg_value, cell in_msg_full, slice in_msg_body) impure {
+    ~dump(msg_value);
     if (in_msg_body.slice_empty?()) { ;; ignore all empty messages
         return ();
     }
@@ -47,6 +48,7 @@ global int ctx_counter;
     int query_id = in_msg_body~load_uint(64); ;; also by convention, the next 64 bits contain the "query id", although this is not always the case
 
     if (op == op::increase) {
+        ~strdump("increment received");
         int increase_by = in_msg_body~load_uint(32);
         ctx_counter += increase_by;
         save_data();
